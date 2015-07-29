@@ -1,1 +1,5 @@
 NTA (Network Traffic Analyser) is contains simple tools for analysing netwrok traffic.
+
+ future works:
+===============
+ Move common files from projects to same place and include them from single location.
