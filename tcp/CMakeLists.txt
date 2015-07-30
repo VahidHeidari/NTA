@@ -21,7 +21,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(tcp-gen)
 set(CMAKE_USE_RELATIVE_PATHS true)
-add_definitions(-g -Wall -Wextra -pedantic)
+add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
 include_directories(.)
 add_executable(tcp-gen
 	main.cpp
