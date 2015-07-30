@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.0">
+  <zoom_level>9</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>612</x>
+      <y>144</y>
+      <w>179</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;27;162;108</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>531</x>
+      <y>18</y>
+      <w>189</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+Searcher
+--
+# r1 : Reader
+# r2 : Reader
+# w : Writer
+--
++ init() : bool
++ search() : bool
++ finish() : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>432</x>
+      <y>144</y>
+      <w>206</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>189;27;27;81</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>522</x>
+      <y>513</y>
+      <w>252</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Struct&gt;&gt;
+Record
+--
++ data:void*
++ size:size_t
+--
++ ~Record() : virtual
++ Record(other:Record&amp;)
++ free() : virtual void
++ copy(d:void*, s:size_t)
++ operator==(other:Record) : bool
++ operator!=(other:Record) : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>639</x>
+      <y>432</y>
+      <w>179</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>162;27;27;81</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>648</x>
+      <y>252</y>
+      <w>261</w>
+      <h>207</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+Writer
+--
++ records : list&lt;Record&gt;
+# out_file : ostream
+--
++ ~Writer() : virtual
++ init(out_path : String) : bool
++ write(data:void*, size:size_t) : bool
++ write_record() : bool
++ write_record(i:int) : bool
++ write_all() : bool
++ finish() : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>441</x>
+      <y>450</y>
+      <w>188</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>27;27;171;63</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>333</x>
+      <y>225</y>
+      <w>288</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+Reader
+--
++ records:List&lt;Record&gt;
+# in_file : istream
+--
++ ~Reader() : virtual
++ init(in_path : String) : bool
++ read_record() : bool
++ read_record(i : int) : bool
++ read_all() : bool
++ num_of_records() : int
++ next_record(record : Record&amp;) : bool
++ previuse_record(record : Record&amp;) : bool
++ rewind() : bool
++ finish() : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

@@ -1,0 +1,5 @@
+file bindiff
+set args /home/pcap/_tmp_v6-http.cap /home/pcap/HTTP.cap out.cap
+b CompleteSearch::search
+b PcapWriter::write_all
+r
