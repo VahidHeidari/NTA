@@ -21,13 +21,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(bindiff)
 add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
-include_directories(. Pcap SearchEngines)
+include_directories(. ../Commons ../Commons/Pcap SearchEngines)
 add_executable(bindiff
 	Main.cpp
-	ReaderFactory.cpp
-	WriterFactory.cpp
-	Pcap/PcapReader.cpp
-	Pcap/PcapWriter.cpp
+	../Commons/ReaderFactory.cpp
+	../Commons/WriterFactory.cpp
+	../Commons/Pcap/PcapReader.cpp
+	../Commons/Pcap/PcapWriter.cpp
 	SearchEngines/CompleteSearch.cpp
 )
 target_link_libraries(bindiff -lpcap)

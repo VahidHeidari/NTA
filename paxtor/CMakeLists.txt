@@ -21,9 +21,9 @@ cmake_minimum_required(VERSION 2.8)
 project(paxtor)
 set(CMAKE_USE_RELATIVE_PATHS true)
 add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
-include_directories(. Pcap)
+include_directories(../Commons ../Commons/Pcap)
 add_executable(paxtor
 	Main.cpp
-	Pcap/PcapReader.cpp
-	Pcap/PcapWriter.cpp)
+	../Commons/Pcap/PcapReader.cpp
+	../Commons/Pcap/PcapWriter.cpp)
 target_link_libraries(paxtor -lpcap)

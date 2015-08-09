@@ -51,7 +51,8 @@ int main(int argc, char** argv)
 
 	unsigned char buffer[MAX_TRANSMITION_UNIT];
 	fread(buffer, file_size, 1, binary_file);
-	dump_packet(buffer, file_size, { 0, 0 });
+	timeval tv = {0, 0};
+	dump_packet(buffer, file_size, tv);
 	close_dumper();
 	return 0;
 }
