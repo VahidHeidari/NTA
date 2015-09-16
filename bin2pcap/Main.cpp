@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 		EXIT_ERROR("	usage: bin2pcap <binary_input_file> <pcap_output_file>\n");
 
 	FILE* binary_file = nullptr;
-	if ((binary_file = fopen(argv[1], "rb")))
+	if (!(binary_file = fopen(argv[1], "rb")))
 		EXIT_ERROR("Could not open input file '%s'.\n", argv[1]);
 
 	if (!init_dumper(string(argv[2])))
