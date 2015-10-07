@@ -25,5 +25,6 @@ include_directories(../Commons ../Commons/Pcap)
 add_executable(paxtor
 	Main.cpp
 	../Commons/Pcap/PcapReader.cpp
+	../Commons/Pcap/ForwardPcapReader.cpp
 	../Commons/Pcap/PcapWriter.cpp)
 target_link_libraries(paxtor -lpcap)
