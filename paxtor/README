@@ -1,1 +1,7 @@
 paxtor (Packet Extractor) is a pcap packet processor and extractor.
+
+ Future works:
+===============
+* Add some better packet number parsing, and reading packet numbers from file.
+* Add some filtering abilities, based on IP:PORT and other packet routing specs.
+* Add some filtering abilities, based on tunneling protocols like PPP, L2TP, GTP, MPLS, and so on.
