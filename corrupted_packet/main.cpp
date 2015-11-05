@@ -22,11 +22,14 @@
 
 #include "Packet.h"
 #include "Dumper.h"
+#include "Utilities.h"
 
 using namespace std;
 using namespace Dumper;
 
-static void init_packet_src(Packet& packet)
+static constexpr int FIXED_LAYER3_SIZE = sizeof(ether_header) + sizeof(iphdr);
+
+void init_packet_src(Packet& packet)
 {
 	packet.set_type(Packet::TCP);
 
@@ -63,18 +66,21 @@ static void init_packet_src(Packet& packet)
 	packet.frame.tcp_pkt.tcp.window = htons(8760);
 }
 
-int main()
+void print_help()
 {
-	if (!init_dumper("packet.pcap")) {
-		cerr << "Could not open output file!" << endl;
-		return 1;
-	}
+	cerr << "    T : Generate TCP corrupted packets." << endl;
+	cerr << "    I : Generate IP corrupted packets." << endl;
+}
 
-	int packet_size = sizeof(ether_header) + sizeof(iphdr) + (sizeof(tcphdr) / 2);
+void dump_corrupted_tcp()
+{
 	// Create packet.
 	Packet packet;
 	timeval tv = {1, 0};
 	init_packet_src(packet);
+
+	int packet_size = sizeof(ether_header) + sizeof(iphdr) + (sizeof(tcphdr) / 2);
+
 	packet.checksum16_tcp();
 	// Dump corrupted packet #1.
 	dump_packet(packet.frame.raw, packet_size, tv);
@@ -90,6 +96,107 @@ int main()
 	++tv.tv_sec;
 	// Dump corrupted packet #3.
 	dump_packet(packet.frame.raw, packet_size, tv);
+}
+
+int get_layer4_size(int packet_size)
+{
+	return packet_size - FIXED_LAYER3_SIZE;
+}
+
+void dump_corrupted_ip()
+{
+	// Create packet.
+	Packet packet;
+	timeval tv = {1, 0};
+	init_packet_src(packet);
+	packet.frame.tcp_pkt.ip.protocol = 0;
+
+	int packet_size = 80;
+	int layer4_size = get_layer4_size(packet_size);
+
+	packet.frame.tcp_pkt.ip.ihl = 5;
+	packet.frame.tcp_pkt.ip.frag_off = htons(IP_MF | 20 >> 3);
+	packet.frame.tcp_pkt.ip.tot_len = htons(layer4_size + sizeof(iphdr));
+
+	// Calculate CRC.
+	if ((packet.frame.tcp_pkt.ip.ihl << 2) < static_cast<int>(sizeof(iphdr)))
+		Utilities::checksum16(reinterpret_cast<uint8_t*>(&packet.frame.tcp_pkt.ip), sizeof(iphdr));
+	else
+		packet.checksum16_tcp_ip();
+
+	++tv.tv_sec;
+	// Dump corrupted IP packet #1
+	dump_packet(packet.frame.raw, packet_size, tv);
+
+	packet_size = 80;
+	layer4_size = get_layer4_size(packet_size);
+	packet.frame.tcp_pkt.ip.ihl = 5;
+	packet.frame.tcp_pkt.ip.frag_off = htons(IP_MF | 24 >> 3);
+	packet.frame.tcp_pkt.ip.tot_len = htons(layer4_size + sizeof(iphdr));
+
+	// Calculate CRC.
+	if ((packet.frame.tcp_pkt.ip.ihl << 2) < static_cast<int>(sizeof(iphdr)))
+		Utilities::checksum16(reinterpret_cast<uint8_t*>(&packet.frame.tcp_pkt.ip), sizeof(iphdr));
+	else
+		packet.checksum16_tcp_ip();
+	++tv.tv_sec;
+	// Dump corrupted IP packet #2
+	dump_packet(packet.frame.raw, packet_size, tv);
+
+	packet_size = 1500;
+	layer4_size = get_layer4_size(packet_size);
+	packet.frame.tcp_pkt.ip.ihl = 5;
+	packet.frame.tcp_pkt.ip.frag_off = htons(IP_MF | 0 >> 3);
+	packet.frame.tcp_pkt.ip.tot_len = htons(layer4_size + sizeof(iphdr));
+
+	// Calculate CRC.
+	if ((packet.frame.tcp_pkt.ip.ihl << 2) < static_cast<int>(sizeof(iphdr)))
+		Utilities::checksum16(reinterpret_cast<uint8_t*>(&packet.frame.tcp_pkt.ip), sizeof(iphdr));
+	else
+		packet.checksum16_tcp_ip();
+	++tv.tv_sec;
+	// Dump corrupted IP packet #3
+	dump_packet(packet.frame.raw, packet_size, tv);
+
+	packet_size = 34;
+	packet.frame.tcp_pkt.ip.ihl = 5;
+	layer4_size = 80;
+	packet.frame.tcp_pkt.ip.frag_off = htons(layer4_size >> 3);
+	packet.frame.tcp_pkt.ip.tot_len = htons(packet_size + 14);
+
+	// Calculate CRC.
+	if ((packet.frame.tcp_pkt.ip.ihl << 2) < static_cast<int>(sizeof(iphdr)))
+		Utilities::checksum16(reinterpret_cast<uint8_t*>(&packet.frame.tcp_pkt.ip), sizeof(iphdr));
+	else
+		packet.checksum16_tcp_ip();
+	++tv.tv_sec;
+	// Dump corrupted IP packet #4
+	dump_packet(packet.frame.raw, packet_size, tv);
+}
+
+int main(int argc, char** argv)
+{
+	if (argc < 2) {
+		cerr << "Command required!" << endl;
+		print_help();
+		return 1;
+	}
+
+	if (!init_dumper("packet.pcap")) {
+		cerr << "Could not open output file!" << endl;
+		return 1;
+	}
+
+	if (argv[1][0] == 'T')
+		dump_corrupted_tcp();
+	else if (argv[1][0] == 'I')
+		dump_corrupted_ip();
+	else {
+		cerr << "Unkown command!" << endl;
+		print_help();
+		close_dumper();
+		return 1;
+	}
 
 	if (!close_dumper()) {
 		cerr << "Could not close output file!" << endl;

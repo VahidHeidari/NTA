@@ -1,5 +1,6 @@
-NTA (Network Traffic Analyser) is contains simple tools for analysing netwrok traffic.
+NTA (Network Traffic Analyser) is contains simple tools for analysing network traffic.
 
- future works:
+ Future works:
 ===============
  Add new projects.
+ Add some text parser for generating corrupted packets, and traffic scenarios.

@@ -40,7 +40,7 @@ uint16_t Utilities::checksum16(uint8_t* buff, size_t len)
 	return ~sum;
 }
 
-uint16_t checksum16_tcp(iphdr* ip, tcphdr* tcp)
+uint16_t Utilities::checksum16_tcp(iphdr* ip, tcphdr* tcp)
 {
 	uint32_t sum = 0;
 	uint16_t tcp_len = htons(ip->tot_len) - (ip->ihl << 2);
