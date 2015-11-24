@@ -1,6 +1,15 @@
 NTA (Network Traffic Analyser) is contains simple tools for analysing network traffic.
 
+It contains the following projects:
+
+bin2pcap         : This utility makes a pcap file from the given binary file of captured packet.
+bindiff          : This utility is a binary diff framework. You can add search and compare engines to implement diff algorithms.
+corrupted_packet : This project is used to generating corrupted packets with hard coded scenarios.
+paxtor           : This utility extracts packets from a saved pcap.
+statistics       : Some scripts to generate statistics of pcap traffic with tshark tool.
+tcp              : This project is used to generating TCP flow with hard coded scenarios.
+
  Future works:
 ===============
- Add new projects.
+ Add new projects ;)
  Add some text parser for generating corrupted packets, and traffic scenarios.
