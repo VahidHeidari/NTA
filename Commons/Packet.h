@@ -66,6 +66,20 @@ public:
 	void set_tcp_ether_type (u_int16_t type) { frame.tcp_pkt.ethernet.ether_type = type; }
 	u_int16_t get_tcp_ether_type () const { return frame.tcp_pkt.ethernet.ether_type; }
 
+	void set_str_mac(uint8_t addr[ETH_ALEN]) { memcpy(frame.tcp_pkt.ethernet.ether_shost, addr, ETH_ALEN); }
+	void set_src_mac(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f) {
+		auto& eth = frame.tcp_pkt.ethernet;
+		eth.ether_shost[0] = a; eth.ether_shost[1] = b; eth.ether_shost[2] = c;
+		eth.ether_shost[3] = d; eth.ether_shost[4] = e; eth.ether_shost[5] = f;
+	}
+
+	void set_dst_mac(uint8_t addr[ETH_ALEN]) { memcpy(frame.tcp_pkt.ethernet.ether_dhost, addr, ETH_ALEN); }
+	void set_dst_mac(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f) {
+		auto& eth = frame.tcp_pkt.ethernet;
+		eth.ether_dhost[0] = a; eth.ether_dhost[1] = b; eth.ether_dhost[2] = c;
+		eth.ether_dhost[3] = d; eth.ether_dhost[4] = e; eth.ether_dhost[5] = f;
+	}
+
 	// TCP properties.
 	void set_tcp_source(uint16_t src_ip) { frame.tcp_pkt.tcp.source = src_ip; }
 	uint16_t get_tcp_source() const { return frame.tcp_pkt.tcp.source; }
