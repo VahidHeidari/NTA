@@ -24,11 +24,11 @@ project(corrupted-packet)
 set(CMAKE_USE_RELATIVE_PATHS true)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall -Wextra -Wpedantic")
 
-include_directories(. ../Commons)
+include_directories(. ../libs)
 
 add_executable(corrupted_packet
 	main.cpp
-	../Commons/Dumper.cpp
-	../Commons/Packet.cpp
-	../Commons/Utilities.cpp)
+	../libs/Dumper.cpp
+	../libs/Packet.cpp
+	../libs/Utilities.cpp)
 target_link_libraries(corrupted_packet -lpcap)

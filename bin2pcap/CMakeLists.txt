@@ -21,6 +21,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(bin2pcap)
 add_definitions(-std=c++11 -Wall -Wextra -pedantic)
-include_directories(../Commons)
-add_executable(bin2pcap Main.cpp ../Commons/Dumper.cpp)
+include_directories(../libs)
+add_executable(bin2pcap Main.cpp ../libs/Dumper.cpp)
 target_link_libraries(bin2pcap -lpcap)
