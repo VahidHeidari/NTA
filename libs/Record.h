@@ -32,7 +32,7 @@ public:
 	Record(const Record& r) : data(nullptr), size(0) { copy(r); }
 	virtual ~Record() { free(); }
 
-	virtual bool operator==(const Record& r)
+	virtual bool operator==(const Record& r) const
 	{
 		if (size != r.size)
 			return false;
@@ -40,7 +40,7 @@ public:
 		return memcmp(data, r.data, size) == 0;
 	}
 
-	virtual bool operator!=(const Record& r)
+	virtual bool operator!=(const Record& r) const
 	{
 		return !(*this == r);
 	}

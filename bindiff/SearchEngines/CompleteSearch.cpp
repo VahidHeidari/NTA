@@ -22,6 +22,8 @@
 
 using namespace std;
 
+extern bool finished;
+
 bool CompleteSearch::init()
 {
 	if (!r1 || !r2 || !w) {
@@ -44,7 +46,11 @@ bool CompleteSearch::search()
 {
 	Record rec1, rec2;
 
-	while (r1->next_record(rec1)) {
+	while (r1->next_record(rec1) && !finished) {
+		cout << "\rCheck Packet #" << r1->get_curr_idx() << " of " << r1->num_of_records()
+			<< "    (%" << (int)(((float)r1->get_curr_idx() / (float)r1->num_of_records()) * 100) << ')'
+			<< "    Differences found #" << w->num_of_records();
+
 		while (r2->next_record(rec2)) {
 			if (rec1 == rec2)
 				break;
@@ -55,6 +61,8 @@ bool CompleteSearch::search()
 			rec->copy(rec1);
 			w->add_record(rec);
 		}
+
+		r2->reset_idx();
 	}
 
 	if (!w->write_all()) {
@@ -62,5 +70,8 @@ bool CompleteSearch::search()
 		return false;
 	}
 
+	cout << endl << endl;
+
 	return true;
 }
+

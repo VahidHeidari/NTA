@@ -76,7 +76,7 @@ public:
 
 protected:
 	std::string path;
-	std::list<Record*>::iterator itr;
+	std::vector<Record*>::iterator itr;
 };
 
 #endif

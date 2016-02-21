@@ -22,21 +22,33 @@
 
 #include <iostream>
 
-#include "Record.h"
+#include <signal.h>
+
 #include "Reader.h"
-#include "Writer.h"
-#include "CompleteSearch.h"
 #include "ReaderFactory.h"
+#include "Record.h"
+#include "SearchEngine.h"
+#include "SearchEngineFactory.h"
+#include "Writer.h"
 #include "WriterFactory.h"
 
 using namespace std;
 
-#define MIN_REQUIRED_ARGS 3
+#define MIN_REQUIRED_ARGS 4
 
 static const char* VERSION = "1.0.0";
 
+const char* engine;
 const char* filetype;
 const char* filename[3];
+
+bool finished = false;
+
+void signal_handler(int signum)
+{
+	(void)signum;
+	finished = true;
+}
 
 template <bool version_only = false>
 void print_help()
@@ -46,9 +58,12 @@ void print_help()
 	if (version_only) {
 		printf("    version : %s\n", VERSION);
 	} else {
-		puts("Usage : bindiff [filetype] input1 input2 output\n");
+		puts("Usage : bindiff engine [filetype] input1 input2 output\n");
 		puts("    help        This help menu.");
 		puts("    version     Versoin of this program.");
+		puts("    engine      The searching engine. Engine types are as follows:");
+		puts("                    comp    : Complete search engine.");
+		puts("                    chk16   : Checksum16 hased search engine.");
 		puts("    [filetype]  The input file type for comparing.\n");
 		puts("        pcap        Search for differences of two pcap files.");
 		printf("\n    version : %s\n", VERSION);
@@ -114,17 +129,18 @@ void parse_comand_line(int argc, char** argv)
 	}
 
 	if (argc < MIN_REQUIRED_ARGS)
-		exit_error("At least two input file, and one output file is required!");
+		exit_error("At least searching engine, two input file, and one output file is required!");
 
-	if (argc == 3) {
-		filename[0] = argv[0];
-		filename[1] = argv[1];
-		filename[2] = argv[2];
-		filetype = nullptr;
-	} else if (argc < 5) {
+	engine = argv[0];
+	if (argc == 4) {
 		filename[0] = argv[1];
 		filename[1] = argv[2];
 		filename[2] = argv[3];
+		filetype = nullptr;
+	} else if (argc < 5) {
+		filename[0] = argv[2];
+		filename[1] = argv[3];
+		filename[2] = argv[4];
 		filetype = argv[0];
 	}
 
@@ -137,6 +153,8 @@ void parse_comand_line(int argc, char** argv)
 
 int main(int argc, char** argv)
 {
+	signal(SIGINT, signal_handler);
+
 	parse_comand_line(argc - 1, &argv[1]);
 
 	// Debug only
@@ -157,7 +175,15 @@ int main(int argc, char** argv)
 			|| !w->init(filename[2]))
 		exit_error("Could not initialize Readers or Writers!");
 
-	SearchEngine* search_engine = new CompleteSearch();
+	SearchEngine* search_engine = SearchEngineFactory::create(engine);
+	if (!search_engine) {
+		delete r1;
+		delete r2;
+		delete w;
+
+		exit_error("Could not create engine of type '%s'!", engine);
+	}
+
 	search_engine->set_r1(r1);
 	search_engine->set_r2(r2);
 	search_engine->set_writer(w);

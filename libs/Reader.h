@@ -21,8 +21,8 @@
 #ifndef READER_H_
 #define READER_H_
 
-#include <list>
 #include <fstream>
+#include <vector>
 
 #include "Record.h"
 
@@ -81,7 +81,7 @@ public:
 
 protected:
 	int idx;
-	std::list<Record*> records;
+	std::vector<Record*> records;
 	std::ifstream in_file;
 };
 

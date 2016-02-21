@@ -18,20 +18,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILITIES_H_
-#define UTILITIES_H_
+#include "SearchEngineFactory.h"
 
-#include <stdint.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
+#include "ChkSumSearch.h"
+#include "CompleteSearch.h"
 
-namespace Utilities
+SearchEngine* SearchEngineFactory::create(const char* engine)
 {
+	if (strncasecmp("comp", engine, 4) == 0)
+		return new CompleteSearch();
+	else if (strncasecmp("chk16", engine, 5) == 0)
+		return new ChkSumSearch();
 
-uint16_t checksum16(uint8_t* buff, size_t len);
-uint16_t checksum16_tcp(iphdr* ip, tcphdr* tcp);
-
-} // namespace Utilities
-
-#endif
+	return nullptr;
+}
 

@@ -18,20 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UTILITIES_H_
-#define UTILITIES_H_
+#ifndef SEARCH_ENGINE_FACTORY_H_
+#define SEARCH_ENGINE_FACTORY_H_
 
-#include <stdint.h>
-#include <netinet/ip.h>
-#include <netinet/tcp.h>
+class SearchEngine;
 
-namespace Utilities
+class SearchEngineFactory
 {
-
-uint16_t checksum16(uint8_t* buff, size_t len);
-uint16_t checksum16_tcp(iphdr* ip, tcphdr* tcp);
-
-} // namespace Utilities
+public:
+	static SearchEngine* create(const char* engine);
+};
 
 #endif
 

@@ -24,10 +24,13 @@ add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
 include_directories(. ../libs ../libs/Pcap SearchEngines)
 add_executable(bindiff
 	Main.cpp
-	../libs/ReaderFactory.cpp
-	../libs/WriterFactory.cpp
 	../libs/Pcap/PcapReader.cpp
 	../libs/Pcap/PcapWriter.cpp
+	../libs/ReaderFactory.cpp
+	../libs/Utilities.cpp
+	../libs/WriterFactory.cpp
+	SearchEngineFactory.cpp
+	SearchEngines/ChkSumSearch.cpp
 	SearchEngines/CompleteSearch.cpp
 )
 target_link_libraries(bindiff -lpcap)
