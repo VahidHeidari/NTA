@@ -69,6 +69,7 @@ bool ChkSumSearch::init()
 	cout << endl << endl;
 
 	print_init_log();
+	print_unique_log();
 
 	return true;
 }
@@ -95,13 +96,16 @@ bool ChkSumSearch::search()
 		const auto& chk1 = chk_packets_input1.find(check_sum);	// Find check sum.
 
 		if (chk1 == chk_packets_input1.end()) {					// If not exist then dump record.
+			if (!chk2.second.size)
+				log_file << " **** Packet #" << dec << packet_num << " in input 2 size is zero! ****" << endl;
+
 			w->add_record(new Record(chk2.second));
 			log_file << "input2 packet #" << dec << packet_num
 				<< " with check 0x" << setw(4) << setfill('0') << hex << check_sum
 				<< " not found in input1!" << endl;
+
 			log_file.flush();
-		}
-		else {
+		} else {
 			bool is_exist = false;
 			for (const auto& coll_rec : chk1->second)				// Else iterate collision list.
 				if (coll_rec.second == chk2.second) {
@@ -110,10 +114,14 @@ bool ChkSumSearch::search()
 				}
 
 			if (!is_exist) {
+				if (!chk2.second.size)
+					log_file << " **** Packet #" << dec << packet_num << " is zero! ****" << endl;
+
 				w->add_record(new Record(chk2.second));
 				log_file << "input2 packet #" << dec << packet_num
 					<< " with check 0x" << setw(4) << setfill('0') << hex << check_sum
 					<< " not found in input1 list!" << endl;
+
 				log_file.flush();
 			}
 		}
@@ -121,6 +129,7 @@ bool ChkSumSearch::search()
 
 	cout << endl << endl;
 
+	cout << "Number of found differences : " << w->num_of_records() << endl;
 	if (!w->write_all()) {
 		cerr << "Writing failed!" << endl;
 		return false;
@@ -149,10 +158,15 @@ void ChkSumSearch::print_init_log() const
 		return;
 	}
 
-	log_file << "\n\n\n";
 	log_file << "Logging starts . . ." << endl;
-	log_file << "Input 1 packets : " << r1->num_of_records() << endl;
-	log_file << "Input 2 packets : " << r2->num_of_records() << endl;
+	log_file << "Input 1 packets       : " << r1->num_of_records() << endl;
+	log_file << "Input 2 packets       : " << r2->num_of_records() << endl;
+
+	int num_diff = r2->num_of_records() - r1->num_of_records();
+	if (num_diff < 0)
+		num_diff *= -1;
+	log_file << "Number of differences : " << num_diff << endl;
+	cout << "Number of differences : " << num_diff << endl;
 
 	// Dump input 1 packets statistic.
 	log_file << endl;
@@ -176,5 +190,35 @@ void ChkSumSearch::print_init_log() const
 	}
 
 	log_file.close();
+}
+
+void ChkSumSearch::print_unique_log() const
+{
+	ofstream log_file("uqlog.log");
+	if (!log_file.is_open()) {
+		cerr << "Could not open log file for unique.!";
+		return;
+	}
+
+	/// Input 1 packets
+	log_file << "Input 1 packets:" << endl;
+	for (const auto& itr : chk_packets_input1) {		// Iterate through checksums.
+		int r1_num = 0;
+		for (const auto& r1 : itr.second) {				// Iterate through collision list.
+			int r2_num = 0;
+			for (const auto& r2 : itr.second) {
+				if (r1_num == ++r2_num)
+					continue;
+				if (r1.second == r2.second)
+					log_file << "    p1 #" << dec << r1.first << " is equal to p2 #" << r2.first
+						<< " with the check sum of 0x" << setw(4) << setfill('0') << hex << itr.first << endl;
+			}
+
+			++r1_num;
+		}
+	}
+
+	/// Input 2 packets
+	log_file << "Input 2 packets:" << endl;
 }
 

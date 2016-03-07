@@ -46,6 +46,9 @@
  *    If exists iterate through collision list.
  *    		If not exist output.
  *    		Go to next record.
+ *
+ * I tested this method with a 4GB pcap with newar 9 millions of packets. It is
+ * very fast :)
  */
 class ChkSumSearch : public SearchEngine
 {
@@ -66,6 +69,7 @@ private:
 	typedef std::vector<ChkListRecordType> ChkList;
 
 	void print_init_log() const;
+	void print_unique_log() const;
 
 	/// Searching data structures
 	ChkMap chk_packets_input1;

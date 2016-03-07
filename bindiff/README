@@ -1,1 +1,11 @@
 BINDIFF is a binary diff utility.
+
+Until now this utility only compares 2 pcap files and save differences to
+another pcap file. There are 2 search engines: CompleteSearch, and ChkSumSearch.
+
+The CompleteSearch is a complete search algorithm. Complete search engine is
+very low in speed, so it is suitable for small pcap file.
+
+ChkSumSearch uses 16 bit check sum calculations for hash function each packet to
+compare faster than complete search, so it can be used in larger pcap files
+above 4GB in size!
