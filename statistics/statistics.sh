@@ -34,6 +34,9 @@ then
 	exit 1
 fi
 
+# Argument $1 is input file name.
+# Argument $2 is protocol filter.
+# Argument $3 is output file name.
 function stats()
 {
 	echo "Generating '$2' stats from input '$1' file to '$2' ouput file."
