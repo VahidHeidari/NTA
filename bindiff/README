@@ -3,7 +3,7 @@ BINDIFF is a binary diff utility.
 This project is a framework for searching and finding record based files and
 file formats. If you want to find deferences of two recorded files, you can use
 this utility. This framework compares all records in file #1 with all records in
-file #1, and writes all defecences in output file.
+file #2, and writes all defecences into output file.
 
 Until now this utility only compares 2 pcap files and save differences to
 another pcap file. There are 2 search engines: CompleteSearch, and ChkSumSearch.
