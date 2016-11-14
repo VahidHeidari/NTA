@@ -28,8 +28,8 @@
 namespace Utilities
 {
 
-uint16_t checksum16(uint8_t* buff, size_t len);
-uint16_t checksum16_tcp(iphdr* ip, tcphdr* tcp);
+uint16_t checksum16(const uint8_t* buff, size_t len);
+uint16_t checksum16_tcp(const iphdr* ip, tcphdr* tcp);
 
 } // namespace Utilities
 

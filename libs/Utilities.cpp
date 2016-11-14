@@ -20,13 +20,12 @@
 
 #include "Utilities.h"
 
-uint16_t Utilities::checksum16(uint8_t* buff, size_t len)
+uint16_t Utilities::checksum16(const uint8_t* buff, size_t len)
 {
 	uint32_t sum = 0;
 
-	while (len > 1)
-	{
-		sum += *((uint16_t*)buff);
+	while (len > 1) {
+		sum += *(reinterpret_cast<const uint16_t*>(buff));
 		buff += 2;
 		len -= 2;
 	}
@@ -35,37 +34,36 @@ uint16_t Utilities::checksum16(uint8_t* buff, size_t len)
 	if (len > 0)
 		sum += *buff;
 
-	sum = (uint16_t)sum + (uint16_t)(sum >> 16);
+	sum = static_cast<uint16_t>(sum) + static_cast<uint16_t>(sum >> 16);
 	sum += sum >> 16;
 	return ~sum;
 }
 
-uint16_t Utilities::checksum16_tcp(iphdr* ip, tcphdr* tcp)
+uint16_t Utilities::checksum16_tcp(const iphdr* ip, tcphdr* tcp)
 {
 	uint32_t sum = 0;
 	uint16_t tcp_len = htons(ip->tot_len) - (ip->ihl << 2);
 
 	// TCP psudo header
-	sum += (uint16_t)ip->saddr; 
-	sum += (uint16_t)(ip->saddr >> 16);
-	sum += (uint16_t)ip->daddr;
-	sum += (uint16_t)(ip->daddr >> 16);
+	sum += static_cast<uint16_t>(ip->saddr); 
+	sum += static_cast<uint16_t>(ip->saddr >> 16);
+	sum += static_cast<uint16_t>(ip->daddr);
+	sum += static_cast<uint16_t>(ip->daddr >> 16);
 	sum += htons(IPPROTO_TCP);
 	sum += htons(tcp_len);
 
 	// TCP header
 	tcp->check = 0;
-	uint16_t* tcp_header = (uint16_t*)tcp;
+	const uint16_t* tcp_header = reinterpret_cast<const uint16_t*>(tcp);
 	while (tcp_len > 1) {
 		sum += *tcp_header++;
 		tcp_len -= 2;
 	}
 
-	if (tcp_len > 0) {
+	if (tcp_len > 0)
 		sum += *tcp_header & 0x00FF;
-	}
 
-	sum = (uint16_t)sum + (uint16_t)(sum >> 16);
+	sum = static_cast<uint16_t>(sum) + static_cast<uint16_t>(sum >> 16);
 	sum += sum >> 16;
 	sum = ~sum;
 	tcp->check = sum;
