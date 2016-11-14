@@ -90,6 +90,7 @@ void TcpSession::send_start_sequence(Packet& src_packet, Packet& dst_packet, tim
 {
 	// Packet no. 1
 	// Send SYN.
+	src_packet.reset_tcp_flags();
 	src_packet.set_tcp_flag_syn();
 	src_packet.set_tcp_seq(src_seq);
 	src_packet.checksum16_tcp();

@@ -1,6 +1,5 @@
 #
-# NTA (Network Traffic Analyser) is contains simple tools for analysing
-# netwrok traffic.
+# HttpGen is a HTTP sample traffic generator.
 #
 # Copyright (C) 2015  Vahid Heidari (DeltaCode)
 # 
@@ -19,13 +18,17 @@
 #
 
 cmake_minimum_required(VERSION 2.8)
+project(HttpGen)
+set(CMAKE_USE_RELATIVE_PATHS true)
+add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
+include_directories(../libs ../libs/Pcap ../tcp)
+add_executable(http-gen
+	HttpContent.cpp
+	Main.cpp
+	ScenarioNo1.cpp
+	${CMAKE_SOURCE_DIR}/libs/Dumper.cpp
+	${CMAKE_SOURCE_DIR}/libs/Packet.cpp
+	${CMAKE_SOURCE_DIR}/libs/Utilities.cpp
+	${CMAKE_SOURCE_DIR}/tcp/TcpSession.cpp)
+target_link_libraries(http-gen pcap)
 
-project(NTA)
-
-add_subdirectory(bin2pcap)
-add_subdirectory(bindiff)
-add_subdirectory(paxtor)
-add_subdirectory(tcp)
-add_subdirectory(corrupted_packet)
-add_subdirectory(ip_fragmenter)
-add_subdirectory(http-gen)
