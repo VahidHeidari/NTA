@@ -4,6 +4,7 @@ It contains the following projects:
 
 bin2pcap         : This utility makes a pcap file from the given binary file of captured packet.
 bindiff          : This utility is a binary diff framework. You can add search and compare engines to implement diff algorithms.
+http-get         : HTTP sample traffic generator.
 corrupted_packet : This project is used to generating corrupted packets with hard coded scenarios.
 paxtor           : This utility extracts packets from a saved pcap.
 statistics       : Some scripts to generate statistics of pcap traffic with tshark tool.
