@@ -29,6 +29,8 @@ using namespace Dumper;
 using namespace HttpContent;
 using namespace std;
 
+static constexpr const char* OUTPUT_FILE_NAME = "./http-single.pcap";
+
 static Packet src_packet;
 static Packet dst_packet;
 
@@ -147,9 +149,9 @@ static Packet get_dst_packet()
 	return packet;
 }
 
-void generate_scenario_no_1()
+void generate_single_connection()
 {
-	if (!init_dumper("./http-scenario-1.pcap")) {
+	if (!init_dumper(OUTPUT_FILE_NAME)) {
 		cout << "Could not initialize dumper!" << endl;
 		return;
 	}
@@ -161,7 +163,7 @@ void generate_scenario_no_1()
 	generate_conversation_2();
 	generate_conversation_3();
 
-	cout << "Sample traffic is created in 'http-scenario-1.pcap' file!" << endl;
+	cout << "Sample traffic is created in '" << OUTPUT_FILE_NAME << "' file!" << endl;
 	close_dumper();
 }
 

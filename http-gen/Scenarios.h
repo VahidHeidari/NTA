@@ -17,5 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void generate_scenario_no_1();
+void generate_single_connection();
+void generate_persist_connection();
+void generate_pipelining_connection();
 

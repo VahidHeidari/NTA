@@ -28,8 +28,9 @@ static const char req_1[] = "GET / HTTP/1.1\r\n"
                             "Cookie: This is some cookie!\r\n"
                             "\r\n";
 
-static const char res_1[] = "HTTP/1.0 200 OK\r\n"
+static const char res_1[] = "HTTP/1.1 200 OK\r\n"
                             "Content-Type: text/plain\r\n"
+                            "Connection: keep-alive\r\n"
                             "Content-Length: 23\r\n"
                             "\r\n"
                             "This is test content!\r\n";
@@ -39,8 +40,9 @@ static const char req_2[] = "GET /mail/index.html HTTP/1.1\r\n"
                             "Connection: keep-alive\r\n"
                             "\r\n";
 
-static const char res_2[] = "HTTP/1.0 200 OK\r\n"
+static const char res_2[] = "HTTP/1.1 200 OK\r\n"
                             "Content-Type: text/plain\r\n"
+                            "Connection: keep-alive\r\n"
                             "Content-Length: 32\r\n"
                             "\r\n"
                             "This is test web mail service!\r\n";
@@ -50,7 +52,7 @@ static const char req_3[] = "GET /content/data.xml HTTP/1.1\r\n"
                             "Connection: keep-alive\r\n"
                             "\r\n";
 
-static const char res_3[] = "HTTP/1.0 200 OK\r\n"
+static const char res_3[] = "HTTP/1.1 200 OK\r\n"
                             "Connection: close\r\n"
                             "Content-Type: text/xml\r\n"
                             "Content-Length: 29\r\n"

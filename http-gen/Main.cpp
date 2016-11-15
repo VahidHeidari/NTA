@@ -21,7 +21,9 @@
 
 int main()
 {
-	generate_scenario_no_1();
+	generate_single_connection();
+	generate_persist_connection();
+	generate_pipelining_connection();
 	return 0;
 }
 

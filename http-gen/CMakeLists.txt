@@ -30,7 +30,9 @@ include_directories(
 add_executable(http-gen
 	HttpContent.cpp
 	Main.cpp
-	ScenarioNo1.cpp
+	PersistConnection.cpp
+	PipeliningConnection.cpp
+	SingleConnection.cpp
 	${CMAKE_SOURCE_DIR}/tcp/TcpSession.cpp)
 
 target_link_libraries(http-gen
