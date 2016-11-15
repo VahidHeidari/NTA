@@ -22,13 +22,15 @@ cmake_minimum_required(VERSION 2.8)
 project(corrupted-packet)
 
 set(CMAKE_USE_RELATIVE_PATHS true)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall -Wextra -Wpedantic")
 
-include_directories(. ../libs)
+include_directories(
+	${CMAKE_SOURCE_DIR}/currupted_packet
+	${CMAKE_SOURCE_DIR}/libs)
 
 add_executable(corrupted_packet
-	main.cpp
-	../libs/Dumper.cpp
-	../libs/Packet.cpp
-	../libs/Utilities.cpp)
-target_link_libraries(corrupted_packet -lpcap)
+	main.cpp)
+
+target_link_libraries(corrupted_packet
+	utils
+	pcap)
+

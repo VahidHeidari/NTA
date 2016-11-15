@@ -20,15 +20,19 @@
 
 cmake_minimum_required(VERSION 2.8)
 project(tcp-gen)
+
 set(CMAKE_USE_RELATIVE_PATHS true)
-add_definitions(-g -std=c++11 -Wall -Wextra -pedantic)
-include_directories(. ../libs)
+
+include_directories(
+	${CMAKE_SOURCE_DIR}/libs
+	${CMAKE_SOURCE_DIR}/tcp)
+
 add_executable(tcp-gen
 	main.cpp
-	../libs/Dumper.cpp
-	../libs/Packet.cpp
-	../libs/Utilities.cpp
 	TcpSession.cpp
-	SendData.cpp
-	)
-target_link_libraries(tcp-gen -lpcap)
+	SendData.cpp)
+
+target_link_libraries(tcp-gen
+	utils
+	pcap)
+

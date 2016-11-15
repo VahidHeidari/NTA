@@ -19,22 +19,17 @@
 #
 
 cmake_minimum_required(VERSION 2.8)
-project(bindiff)
+
+project(Pcap)
+
+set(CMAKE_USE_RELATIVE_PATHS true)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/bindiff
-	${CMAKE_SOURCE_DIR}/bindiff/SearchEngines
 	${CMAKE_SOURCE_DIR}/libs
 	${CMAKE_SOURCE_DIR}/libs/Pcap)
 
-add_executable(bindiff
-	Main.cpp
-	SearchEngineFactory.cpp
-	SearchEngines/ChkSumSearch.cpp
-	SearchEngines/CompleteSearch.cpp)
-
-target_link_libraries(bindiff
-	utils
-	pcap-utils
-	pcap)
+add_library(pcap-utils
+	ForwardPcapReader.cpp
+	PcapReader.cpp
+	PcapWriter.cpp)
 

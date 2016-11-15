@@ -24,17 +24,16 @@ project(ip-fragmenter)
 
 set(CMAKE_USE_RELATIVE_PATHS true)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall -Wextra -pedantic")
-
-include_directories(. ../libs)
+include_directories(
+	${CMAKE_SOURCE_DIR}/ip-fragmenter
+	${CMAKE_SOURCE_DIR}/libs)
 
 add_executable(ip-fragmenter
 	main.cpp
 	RawData.cpp
-	Fragmenter.cpp
-	../libs/Dumper.cpp
-	../libs/Packet.cpp
-	../libs/Utilities.cpp
-	)
+	Fragmenter.cpp)
 
-target_link_libraries(ip-fragmenter -lpcap)
+target_link_libraries(ip-fragmenter
+	utils
+	pcap)
+

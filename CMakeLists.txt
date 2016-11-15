@@ -22,10 +22,15 @@ cmake_minimum_required(VERSION 2.8)
 
 project(NTA)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -Wall -Wextra -pedantic")
+
 add_subdirectory(bin2pcap)
 add_subdirectory(bindiff)
+add_subdirectory(libs)
+add_subdirectory(libs/Pcap)
 add_subdirectory(paxtor)
 add_subdirectory(tcp)
 add_subdirectory(corrupted_packet)
 add_subdirectory(ip_fragmenter)
 add_subdirectory(http-gen)
+
