@@ -20,4 +20,5 @@
 void generate_single_connection();
 void generate_persist_connection();
 void generate_pipelining_connection();
+void generate_breaked_header();
 

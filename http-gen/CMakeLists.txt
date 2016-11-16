@@ -28,8 +28,10 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/tcp)
 
 add_executable(http-gen
+	BreakedHeader.cpp
 	HttpContent.cpp
 	Main.cpp
+	PacketInit.cpp
 	PersistConnection.cpp
 	PipeliningConnection.cpp
 	SingleConnection.cpp

@@ -56,6 +56,7 @@ static const char res_3[] = "HTTP/1.1 200 OK\r\n"
                             "Connection: close\r\n"
                             "Content-Type: text/xml\r\n"
                             "Content-Length: 29\r\n"
+			    "Cookie: SOME CONTENT CONTAINER DOT COM COOKIE . . ."
                             "\r\n"
                             "<Data>Some Test Data</Data>\r\n";
 

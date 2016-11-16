@@ -17,14 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Scenarios.h"
+#include "Packet.h"
 
-int main()
-{
-	generate_single_connection();
-	generate_persist_connection();
-	generate_pipelining_connection();
-	generate_breaked_header();
-	return 0;
-}
+extern Packet src_packet;
+extern Packet dst_packet;
+
+void intialize_src_and_dst_packets();
 
