@@ -118,10 +118,10 @@ bool is_supported_filetype(const char* type)
 void parse_comand_line(int argc, char** argv)
 {
 	if (argc == 1) {
-		if (strncasecmp("VERSION", argv[0], 7) == 0) {
+		if (strncasecmp("--VERSION", argv[0], 7) == 0) {
 			print_help<true>();
 			exit(0);
-		} else if (strncasecmp("HELP", argv[0], 4) == 0) {
+		} else if (strncasecmp("--HELP", argv[0], 4) == 0) {
 			print_help();
 			exit(0);
 		} else
