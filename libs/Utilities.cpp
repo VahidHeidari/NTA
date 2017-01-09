@@ -64,7 +64,7 @@ uint16_t checksum16_tcp(const iphdr* ip, tcphdr* tcp)
 	}
 
 	if (tcp_len > 0)
-		sum += *tcp_header & 0x00FF;
+		sum += *reinterpret_cast<const uint8_t*>(tcp_header);
 
 	sum = static_cast<uint16_t>(sum) + static_cast<uint16_t>(sum >> 16);
 	sum += sum >> 16;
@@ -108,7 +108,7 @@ uint16_t checksum16_ipv6_tcp(const ip6_hdr* ip, tcphdr* tcp)
 	}
 
 	if (tcp_len > 0)
-		sum += *tcp_header & 0x00FF;
+		sum += *reinterpret_cast<const uint8_t*>(tcp_header);
 
 	sum = static_cast<uint16_t>(sum) + static_cast<uint16_t>(sum >> 16);
 	sum += sum >> 16;
