@@ -20,7 +20,10 @@
 
 #include "Utilities.h"
 
-uint16_t Utilities::checksum16(const uint8_t* buff, size_t len)
+namespace Utilities
+{
+
+uint16_t checksum16(const uint8_t* buff, size_t len)
 {
 	uint32_t sum = 0;
 
@@ -39,7 +42,7 @@ uint16_t Utilities::checksum16(const uint8_t* buff, size_t len)
 	return ~sum;
 }
 
-uint16_t Utilities::checksum16_tcp(const iphdr* ip, tcphdr* tcp)
+uint16_t checksum16_tcp(const iphdr* ip, tcphdr* tcp)
 {
 	uint32_t sum = 0;
 	uint16_t tcp_len = htons(ip->tot_len) - (ip->ihl << 2);
@@ -68,5 +71,51 @@ uint16_t Utilities::checksum16_tcp(const iphdr* ip, tcphdr* tcp)
 	sum = ~sum;
 	tcp->check = sum;
 	return sum;
+}
+
+uint16_t checksum16_ipv6_tcp(const ip6_hdr* ip, tcphdr* tcp)
+{
+	uint32_t sum = 0;
+	uint16_t tcp_len = htons(ip->ip6_plen);
+
+	// TCP psudo header
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[0]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[1]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[2]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[3]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[4]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[5]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[6]); 
+	sum += static_cast<uint16_t>(ip->ip6_src.s6_addr16[7]); 
+
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[0]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[1]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[2]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[3]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[4]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[5]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[6]);
+	sum += static_cast<uint16_t>(ip->ip6_dst.s6_addr16[7]);
+	sum += htons(IPPROTO_TCP);
+	sum += htons(tcp_len);
+
+	// TCP header
+	tcp->check = 0;
+	const uint16_t* tcp_header = reinterpret_cast<const uint16_t*>(tcp);
+	while (tcp_len > 1) {
+		sum += *tcp_header++;
+		tcp_len -= 2;
+	}
+
+	if (tcp_len > 0)
+		sum += *tcp_header & 0x00FF;
+
+	sum = static_cast<uint16_t>(sum) + static_cast<uint16_t>(sum >> 16);
+	sum += sum >> 16;
+	sum = ~sum;
+	tcp->check = sum;
+	return sum;
+}
+
 }
 

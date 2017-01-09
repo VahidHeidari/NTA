@@ -21,15 +21,17 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
 
-#include <stdint.h>
 #include <netinet/ip.h>
+#include <netinet/ip6.h>
 #include <netinet/tcp.h>
+#include <stdint.h>
 
 namespace Utilities
 {
 
 uint16_t checksum16(const uint8_t* buff, size_t len);
 uint16_t checksum16_tcp(const iphdr* ip, tcphdr* tcp);
+uint16_t checksum16_ipv6_tcp(const ip6_hdr* ip, tcphdr* tcp);
 
 } // namespace Utilities
 

@@ -25,16 +25,18 @@
 #include <cstring>
 #include <cstdint>
 
+#include <netinet/ether.h>
 #include <netinet/ip.h>
+#include <netinet/ip6.h>
 #include <netinet/tcp.h>
 #include <netinet/udp.h>
-#include <netinet/ether.h>
 
 class Packet {
 public:
 	static constexpr size_t MTU = 1600;		// Max Transmit Unit
 	static constexpr size_t TCP_PAYLOAD_SIZE = MTU - sizeof(ether_header) - sizeof(iphdr) - sizeof(tcphdr);
 	static constexpr size_t UDP_PAYLOAD_SIZE = MTU - sizeof(ether_header) - sizeof(iphdr) - sizeof(udphdr);
+	static constexpr size_t TCP_IPV6_PAYLOAD_SIZE = MTU - sizeof(ether_header) - sizeof(ip6_hdr) - sizeof(tcphdr);
 
 	enum TcpFlags {
 		TCP_FLAG_FIN = 0x01,
@@ -182,6 +184,14 @@ public:
 			udphdr			udp;
 			uint8_t			payload[UDP_PAYLOAD_SIZE];
 		} udp_pkt;
+
+		/// TCP packet on IPv6 network layer
+		struct __attribute__ ((__packed__)) Ipv6TCP {
+			ether_header	ethernet;
+			ip6_hdr			ip;
+			tcphdr			tcp;
+			uint8_t			payload[TCP_IPV6_PAYLOAD_SIZE];
+		} ipv6_tcp_pkt;
 
 		/// Raw packet frame
 		uint8_t raw[MTU];

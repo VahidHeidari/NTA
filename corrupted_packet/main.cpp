@@ -66,10 +66,45 @@ void init_packet_src(Packet& packet)
 	packet.frame.tcp_pkt.tcp.window = htons(8760);
 }
 
-void print_help()
+void init_packet_src_ipv6(Packet& packet)
 {
-	cerr << "    T : Generate TCP corrupted packets." << endl;
-	cerr << "    I : Generate IP corrupted packets." << endl;
+	// Ethernet header initialization
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[0] = 0xFE;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[1] = 0xFF;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[2] = 0x20;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[3] = 0x00;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[4] = 0x10;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_dhost[5] = 0x00;
+
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[0] = 0x00;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[1] = 0x00;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[2] = 0x10;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[3] = 0x00;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[4] = 0x00;
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_shost[5] = 0x00;
+
+	packet.frame.ipv6_tcp_pkt.ethernet.ether_type = htons(ETHERTYPE_IPV6);
+
+	// IPv6 header initialization
+	packet.frame.ipv6_tcp_pkt.ip.ip6_src.s6_addr32[0] = 0xad434803;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_src.s6_addr32[1] = 0xad434803;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_src.s6_addr32[2] = 0xad434803;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_src.s6_addr32[3] = 0xad434803;
+
+	packet.frame.ipv6_tcp_pkt.ip.ip6_dst.s6_addr32[0] = 0x18487703;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_dst.s6_addr32[1] = 0xad434803;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_dst.s6_addr32[2] = 0xad438838;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_dst.s6_addr32[3] = 0x00004803;
+
+	packet.frame.ipv6_tcp_pkt.ip.ip6_vfc = 6 << 4;
+	packet.frame.ipv6_tcp_pkt.ip.ip6_plen = htons(20);
+	packet.frame.ipv6_tcp_pkt.ip.ip6_nxt = IPPROTO_TCP;
+
+	// TCP header initialization
+	packet.frame.ipv6_tcp_pkt.tcp.source = htons(0x0d2c);
+	packet.frame.ipv6_tcp_pkt.tcp.dest = htons(0x0050);
+	packet.frame.ipv6_tcp_pkt.tcp.doff = sizeof(tcphdr) / 4; // 32 bit (4 byte) word offset.
+	packet.frame.ipv6_tcp_pkt.tcp.window = htons(8760);
 }
 
 void dump_corrupted_tcp()
@@ -174,6 +209,27 @@ void dump_corrupted_ip()
 	dump_packet(packet.frame.raw, packet_size, tv);
 }
 
+void dump_corrupted_ipv6()
+{
+	// Create packet.
+	Packet packet;
+	timeval tv = {1, 0};
+	init_packet_src_ipv6(packet);
+
+	int packet_size = sizeof(ether_header) + sizeof(ip6_hdr) + sizeof(tcphdr);
+	Utilities::checksum16_ipv6_tcp(&packet.frame.ipv6_tcp_pkt.ip, &packet.frame.ipv6_tcp_pkt.tcp);
+
+	// Dump corrupted IP packet #1
+	dump_packet(packet.frame.raw, packet_size, tv);
+}
+
+void print_help()
+{
+	cerr << "    T  : Generate TCP corrupted packets." << endl;
+	cerr << "    I  : Generate IP corrupted packets." << endl;
+	cerr << "    I6 : Generate IPv6 corrupted packets." << endl;
+}
+
 int main(int argc, char** argv)
 {
 	if (argc < 2) {
@@ -189,8 +245,10 @@ int main(int argc, char** argv)
 
 	if (argv[1][0] == 'T')
 		dump_corrupted_tcp();
-	else if (argv[1][0] == 'I')
+	else if (argv[1][0] == 'I' && argv[1][1] == '\0')
 		dump_corrupted_ip();
+	else if (argv[1][0] == 'I' && argv[1][1] == '6')
+		dump_corrupted_ipv6();
 	else {
 		cerr << "Unkown command!" << endl;
 		print_help();
